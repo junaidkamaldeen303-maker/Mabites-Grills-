@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Mabites Grills — fresh shawarma, grilled chicken, chips, parfait and more.">
+  <title>Mabites Grills | Fresh Shawarma, Made to Order</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+  <!-- ================= NAVBAR ================= -->
+  <nav class="navbar" id="mainNavbar" aria-label="Main navigation">
+    <a href="#home" class="brand" aria-label="Mabites Grills home">
+      <img src="frontend/public/images/mabitelogo.png" alt="Mabites Grills">
+      <span class="brand-text">
+        <strong>Mabites</strong>
+        <small>GRILLS</small>
+      </span>
+    </a>
+
+    <div class="nav-links" id="navLinks">
+      <a href="#home" class="active" data-section="home">Home</a>
+      <a href="#menu" data-section="menu">Menu</a>
+      <a href="#reviews" data-section="reviews">Reviews</a>
+      <a href="#" id="trackOrderNav">Track Order</a>
+    </div>
+
+    <div class="search-mobile-wrapper" id="searchMobileWrapper">
+      <div class="search-box-mobile">
+        <input type="search" placeholder="Search..." id="searchMobileInput" aria-label="Search">
+        <button class="search-mobile-submit" id="searchMobileSubmit" aria-label="Search">
+          <i class="fas fa-search"></i>
+        </button>
+        <button class="close-search-mobile" id="closeSearchMobile">✕</button>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <label class="search-box" id="searchBox" aria-label="Search menu">
+        <input type="search" placeholder="Search..." id="searchInput" aria-label="Search">
+        <button class="search-submit" id="searchSubmit" aria-label="Search">
+          <i class="fas fa-search"></i>
+        </button>
+      </label>
+
+      <button class="search-toggle" id="searchToggle" aria-label="Search menu">
+        <span aria-hidden="true">⌕</span>
+      </button>
+
+      <a href="cart.html" class="cart-button" id="cartBtn" aria-label="View cart">
+        <span aria-hidden="true">🛒</span>
+        <b class="cart-count" id="cartBadge"></b>
+      </a>
+
+      <a href="#menu" class="btn btn-primary nav-order">Order Now</a>
+    </div>
+  </nav>
+
+  <!-- ================= FLOATING CART BUTTON ================= -->
+  <div class="floating-cart" id="floatingCart">
+    <a href="cart.html" class="floating-cart-btn" aria-label="View cart">
+      <span aria-hidden="true">🛒</span>
+      <b class="floating-cart-count" id="floatingCartBadge"></b>
+    </a>
+  </div>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" id="home">
+    <div class="hero-bg"></div>
+
+    <div class="hero-content">
+      <div class="hero-copy">
+        <p class="eyebrow">Freshly Grilled <span>•</span> Made With Love</p>
+        <h1>Fresh <span>Shawarma,</span><br>Made to Order.</h1>
+        <p class="hero-description">
+          Premium wraps, grilled to perfection. Enjoy delicious shawarma,
+          crispy chicken, chips, parfait and more, freshly prepared for you.
+        </p>
+        <div class="hero-actions">
+          <a href="#menu" class="btn btn-hero-menu pulse-btn">View Menu</a>
+        </div>
+        <div class="trust-badges">
+          <div class="trust-badge"><span class="icon halal">✓</span><span class="text">100% Halal</span></div>
+          <div class="trust-badge"><span class="icon fresh">✦</span><span class="text">Fresh Daily</span></div>
+          <div class="trust-badge"><span class="icon time">◷</span><span class="text">15–25 min</span></div>
+          <div class="trust-badge"><span class="icon secure">🔒</span><span class="text">Secure Payment</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       CATEGORY FILTER BAR
+       ============================================ -->
+  <section class="category-filter" id="categoryFilter">
+    <div class="container">
+      <div class="category-scroll" id="categoryScroll">
+        <!-- Categories will be rendered by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SEARCH RESULTS SECTION
+       ============================================ -->
+  <section class="search-results-container" id="searchResultsSection">
+    <div class="container">
+      <div class="search-results-header">
+        <h2>Search Results for "<span id="searchQueryDisplay"></span>"</h2>
+        <div class="search-results-header-right">
+          <span class="result-count" id="searchResultCount">0 items found</span>
+          <button class="clear-search" id="clearSearchBtn">Clear Search</button>
+        </div>
+      </div>
+      <div class="search-results-grid" id="searchResultsGrid">
+        <!-- Results rendered by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       MENU SECTION
+       ============================================ -->
+  <section class="menu-section" id="menu">
+    <div class="container">
+      <div class="menu-header">
+        <div class="menu-header-left">
+          <h2>Our <span>Menu</span></h2>
+          <p id="menuSubtitle">Handpicked favourites just for you</p>
+        </div>
+        <div class="menu-header-right">
+          <span class="count-badge" id="menuCount"><strong>0</strong> items</span>
+        </div>
+      </div>
+
+      <div class="menu-grid" id="menuGrid">
+        <!-- Skeleton Loading will be shown initially -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       REVIEWS SECTION - Google Reviews Carousel
+       ============================================ -->
+  <section class="reviews-section" id="reviews" aria-label="Customer reviews">
+    <div class="reviews-container">
+
+      <!-- Header -->
+      <div class="reviews-header">
+        <h2>What Our Customers Say</h2>
+        <p>Real reviews from our customers on Google</p>
+        <div class="reviews-accent-line"></div>
+      </div>
+
+      <!-- Decorative Quote Mark -->
+      <div class="reviews-quote-mark" aria-hidden="true">"</div>
+
+      <!-- Carousel -->
+      <div class="reviews-carousel-wrapper" role="region" aria-label="Customer reviews carousel">
+        <div class="reviews-carousel" id="reviewsCarousel">
+          <!-- Reviews will be dynamically loaded -->
+        </div>
+
+        <!-- Navigation Controls -->
+        <button class="reviews-arrow reviews-arrow-prev" id="reviewsPrev" aria-label="Previous review">
+          <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        <button class="reviews-arrow reviews-arrow-next" id="reviewsNext" aria-label="Next review">
+          <i class="fas fa-chevron-right" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <!-- Pagination Dots -->
+      <div class="reviews-dots" id="reviewsDots" role="tablist" aria-label="Review pagination">
+        <!-- Dots will be dynamically generated -->
+      </div>
+
+      <!-- CTA Button -->
+      <div class="reviews-cta-wrapper">
+        <a href="https://www.google.com/maps/place/Mabites+wraps+%26+grills/@8.1711054,4.2703854,17z/data=!4m8!3m7!1s0x10370d760f1b9a39:0xe14ce961bc9f957f!8m2!3d8.1711054!4d4.2703854!9m1!1b1!16s%2Fg%2F11zh986hmw?entry=ttu&g_ep=EgoyMDI2MDgyNC4wIKXMDSoASAFQAw%3D%3D"
+          target="_blank" rel="noopener noreferrer" class="reviews-cta-btn"
+          aria-label="Review us on Google (opens in new tab)">
+          <i class="fab fa-google" aria-hidden="true"></i>
+          Review Us On Google
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================
+       TRACK ORDER MODAL - MATCHING CART.HTML UI
+       ============================================ -->
+  <div class="track-modal-overlay" id="trackModal">
+    <div class="track-modal">
+      <button class="track-modal-close" id="trackModalClose">&times;</button>
+      <div class="track-modal-icon">📦</div>
+      <h2>Track Your Order</h2>
+      <p>Enter your order number to track its status</p>
+      <div class="track-form">
+        <input type="text" class="track-input" id="trackInput" placeholder="e.g. MB-260818-0251" maxlength="30">
+        <button class="track-btn" id="trackBtn">Track</button>
+      </div>
+      <div class="track-result" id="trackResult" style="display:none;">
+        <!-- Rendered by JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       FOOTER - REAL SOCIAL LINKS
+       ============================================ -->
+  <footer class="customer-footer">
+    <div class="footer-content">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Mabites Grills</h4>
+          <p>Fresh shawarma, grilled chicken, chips, parfait and more — made with love.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <p>📍 Adenike Way, Lautech, Ogbomoso</p>
+          <div class="footer-contact-row">
+            <a href="tel:09057576089" class="footer-contact-link">
+              <i class="fas fa-phone"></i> 09057576089
+            </a>
+            <span class="footer-contact-divider">•</span>
+            <a href="mailto:ajayimotunrayo240@gmail.com" class="footer-contact-link">
+              <i class="fas fa-envelope"></i> ajayimotunrayo240@gmail.com
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Hours</h4>
+          <p>Mon - Sat: 4pm – 11pm</p>
+          <p>Sun: 6pm – 11pm</p>
+        </div>
+        <div class="footer-col">
+          <h4>Follow Us</h4>
+          <div class="social-links">
+            <a href="https://instagram.com/mabitesgrills" target="_blank" rel="noopener noreferrer"
+              aria-label="Instagram" class="social-link instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://tiktok.com/@mabitesgrills" target="_blank" rel="noopener noreferrer" aria-label="TikTok"
+              class="social-link tiktok">
+              <i class="fab fa-tiktok"></i>
+            </a>
+            <a href="https://wa.me/2349057576089" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
+              class="social-link whatsapp">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+          </div>
+          <div class="footer-legal">
+            <a href="terms.html">Terms &amp; Conditions</a>
+            <span class="footer-divider">•</span>
+            <a href="privacy.html">Privacy Policy</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Mabites Grills. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="index.js"></script>
+
+  <!-- ============================================
+       CART BADGE SYNC
+       ============================================ -->
+  <script>
+    (function () {
+      'use strict';
+
+      var cartBadge = document.getElementById('cartBadge');
+      var floatingCartBadge = document.getElementById('floatingCartBadge');
+
+      function getCartCount() {
+        try {
+          var backup = localStorage.getItem('mabite_cart_backup');
+          if (backup) {
+            var cart = JSON.parse(backup);
+            var count = 0;
+            for (var i = 0; i < cart.length; i++) {
+              count += cart[i].quantity;
+            }
+            return count;
+          }
+        } catch (e) { }
+
+        try {
+          var count = localStorage.getItem('mabite_cart_count');
+          if (count) {
+            return parseInt(count) || 0;
+          }
+        } catch (e) { }
+
+        return 0;
+      }
+
+      function updateCartBadge() {
+        var count = getCartCount();
+
+        if (cartBadge) {
+          if (count > 0) {
+            cartBadge.textContent = count;
+            cartBadge.style.display = 'flex';
+          } else {
+            cartBadge.textContent = '';
+            cartBadge.style.display = 'none';
+          }
+        }
+
+        if (floatingCartBadge) {
+          if (count > 0) {
+            floatingCartBadge.textContent = count;
+            floatingCartBadge.style.display = 'flex';
+          } else {
+            floatingCartBadge.textContent = '';
+            floatingCartBadge.style.display = 'none';
+          }
+        }
+
+        try {
+          localStorage.setItem('mabite_cart_count', JSON.stringify(count));
+        } catch (e) { }
+      }
+
+      updateCartBadge();
+
+      window.addEventListener('storage', function (e) {
+        if (e.key === 'mabite_cart_backup' || e.key === 'mabite_cart_count') {
+          updateCartBadge();
+        }
+      });
+
+      document.addEventListener('cartUpdated', function () {
+        updateCartBadge();
+      });
+
+      setInterval(updateCartBadge, 2000);
+      console.log('🛒 Cart badge sync initialized - Count:', getCartCount());
+
+    })();
+  </script>
+
+</body>
+
+</html>

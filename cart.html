@@ -1,0 +1,2278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Mabites Grills — Checkout">
+    <title>Mabites Grills | Checkout</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- html2canvas for image generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+    </script>
+</head>
+
+<body>
+
+    <!-- ============================================
+       CART PAGE - CHECKOUT FLOW (NO NAVBAR)
+       ============================================ -->
+    <div class="cart-page">
+
+        <!-- ===== STEP 1: CHECKOUT ===== -->
+        <div class="checkout-step" id="stepCheckout">
+            <div class="checkout-container">
+
+                <!-- Header with Cart Count -->
+                <div class="checkout-header-with-count">
+                    <div class="checkout-header-left">
+                        <h1>Your Order</h1>
+                        <p class="checkout-subtitle">Review your items and enter your details</p>
+                    </div>
+                    <div class="checkout-cart-count">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span id="cartCountTop">0</span>
+                    </div>
+                </div>
+
+                <!-- Cart Items -->
+                <div class="cart-items-list" id="cartItemsList">
+                    <!-- Items rendered by JavaScript -->
+                </div>
+
+                <!-- Your Details -->
+                <div class="details-section">
+                    <h3>Your Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customerName">Full Name <span class="required">*</span></label>
+                            <input type="text" id="customerName" placeholder="e.g. David Okonkwo" required
+                                maxlength="100">
+                            <span class="error-message" id="nameError">Please enter your full name</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerPhone">Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="customerPhone" placeholder="e.g. 080 1234 5678" required
+                                maxlength="15">
+                            <span class="error-message" id="phoneError">Please enter a valid phone number</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerEmail">Email Address <span class="optional">(optional)</span></label>
+                        <input type="email" id="customerEmail" placeholder="e.g. david@example.com" maxlength="100">
+                        <small class="field-hint">We'll send your order confirmation here</small>
+                    </div>
+                </div>
+
+                <!-- Delivery Method -->
+                <div class="delivery-section">
+                    <h3>How should we get it to you?</h3>
+                    <div class="delivery-toggle">
+                        <button class="toggle-option active" data-value="pickup">
+                            <i class="fas fa-store"></i>
+                            <span>Pickup</span>
+                        </button>
+                        <button class="toggle-option" data-value="delivery">
+                            <i class="fas fa-truck"></i>
+                            <span>Delivery</span>
+                        </button>
+                    </div>
+
+                    <!-- Delivery Address (hidden by default) -->
+                    <div class="delivery-address" id="deliveryAddress">
+                        <div class="form-group">
+                            <label for="deliveryStreet">Street / Area <span class="required">*</span></label>
+                            <input type="text" id="deliveryStreet" placeholder="e.g. 42 Awolowo Road" maxlength="200">
+                            <span class="error-message" id="streetError">Please enter your street/area</span>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="deliveryBuilding">Building / House No. <span
+                                        class="required">*</span></label>
+                                <input type="text" id="deliveryBuilding" placeholder="e.g. Suite 204" maxlength="100">
+                                <span class="error-message" id="buildingError">Please enter your building/house
+                                    number</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="deliveryLandmark">Landmark <span class="optional">(optional)</span></label>
+                                <input type="text" id="deliveryLandmark" placeholder="e.g. Opposite the mall"
+                                    maxlength="200">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="order-summary">
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span id="subtotalAmount">₦0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery Fee</span>
+                        <span id="deliveryFeeAmount">₦0</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span class="amount" id="totalAmount">₦0</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="checkout-actions">
+                    <button class="btn-place-order" id="continueToPaymentBtn">
+                        Continue to Payment
+                    </button>
+                    <button class="btn-clear-cart" id="clearCartBtn">
+                        <i class="fas fa-trash-alt"></i> Clear Cart
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===== STEP 2: PAYMENT METHOD ===== -->
+        <div class="checkout-step" id="stepPayment" style="display:none;">
+            <div class="checkout-container">
+
+                <!-- Back to Checkout Button -->
+                <div class="payment-header-with-back">
+                    <button class="back-circle" id="backToCheckoutBtn" aria-label="Go back">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="payment-header-center">
+                        <h1>Choose Payment Method</h1>
+                    </div>
+                </div>
+                <p class="payment-subtitle">Select how you'd like to pay for your order</p>
+
+                <!-- Compact Order Summary -->
+                <div class="payment-summary-compact">
+                    <div class="payment-summary-row">
+                        <span>Order Total</span>
+                        <span id="paymentTotalAmount">₦0</span>
+                    </div>
+                    <div class="payment-summary-row">
+                        <span>Items</span>
+                        <span id="paymentItemCount">0 items</span>
+                    </div>
+                </div>
+
+                <!-- Payment Options -->
+                <div class="payment-options" id="paymentOptions">
+                    <!-- Rendered by JavaScript -->
+                </div>
+
+                <!-- Bank Transfer Details -->
+                <div class="bank-transfer-details" id="bankTransferDetails" style="display:none;">
+                    <div class="bank-info-card">
+                        <h4>Bank Transfer Details</h4>
+                        <div class="bank-info-row">
+                            <span>Bank:</span>
+                            <strong>Moniepoint</strong>
+                        </div>
+                        <div class="bank-info-row">
+                            <span>Account Name:</span>
+                            <strong>Ajayi Mabel Motunrayo</strong>
+                        </div>
+                        <div class="bank-info-row">
+                            <span>Account Number:</span>
+                            <strong>5872047550</strong>
+                        </div>
+                        <div class="form-group" style="margin-top:12px;">
+                            <label for="transferReference">Order Confirmation Name <span
+                                    class="required">*</span></label>
+                            <input type="text" id="transferReference" placeholder="e.g. John Doe" maxlength="100">
+                            <span class="error-message" id="bankNameError">Please enter your confirmation name</span>
+                        </div>
+                        <div class="form-group" style="margin-top:8px;">
+                            <label for="transferAmount">Amount to Transfer <span class="required">*</span></label>
+                            <input type="text" id="transferAmount" readonly
+                                style="background:#f5f0eb;font-weight:700;color:#1a1a1e;">
+                        </div>
+                        <div class="secure-badge">
+                            <i class="fas fa-lock"></i>
+                            <span>Please transfer the exact amount and enter your confirmation name above</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Button -->
+                <button class="btn-make-payment" id="makePaymentBtn">
+                    <span id="paymentBtnText">Confirm Order</span>
+                </button>
+
+            </div>
+        </div>
+
+        <!-- ===== STEP 3: ORDER STATUS ===== -->
+        <div class="checkout-step" id="stepStatus" style="display:none;">
+            <div class="checkout-container status-container">
+
+                <div class="status-header">
+                    <div class="status-icon" id="statusIcon">📝</div>
+                    <h1 id="statusTitle">Order Received!</h1>
+                    <p id="statusSubtitle">Your order has been received and is pending confirmation</p>
+                </div>
+
+                <div class="order-reference">
+                    <span class="order-number" id="orderNumber">#MAB1234</span>
+                    <button class="copy-order-btn" id="copyOrderBtn" title="Copy order number">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <span class="order-amount" id="orderAmount">₦8,500</span>
+                </div>
+
+                <div class="payment-status-badge" id="paymentStatusBadge">
+                    <span class="status-dot" id="statusDot"></span>
+                    <span id="paymentStatusText">Pending Confirmation</span>
+                </div>
+
+                <div class="order-tracker-horizontal" id="orderTracker">
+                    <!-- Rendered by JavaScript -->
+                </div>
+
+                <div class="order-actions-row">
+                    <button class="btn-action-receipt" id="downloadReceiptBtn">
+                        <i class="fas fa-download"></i> Download Receipt
+                    </button>
+                    <button class="btn-action-receipt" id="shareOrderBtn">
+                        <i class="fas fa-share-alt"></i> Share Order
+                    </button>
+                    <button class="btn-action-receipt btn-back-to-menu" id="backToMenuBtn">
+                        <i class="fas fa-arrow-left"></i> Back to Menu
+                    </button>
+                </div>
+
+                <div class="order-details-toggle">
+                    <button class="toggle-details-btn" id="toggleDetailsBtn">
+                        <i class="fas fa-chevron-down"></i>
+                        View Order Details
+                    </button>
+                </div>
+
+                <div class="order-details-panel" id="orderDetailsPanel" style="display:none;">
+                    <div class="order-details-content">
+                        <div class="detail-row">
+                            <span>Order #</span>
+                            <span id="detailOrderNumber">MAB1234</span>
+                        </div>
+                        <div class="detail-items" id="detailItems">
+                            <!-- Rendered by JavaScript -->
+                        </div>
+                        <div class="detail-divider"></div>
+                        <div class="detail-row">
+                            <span>Subtotal</span>
+                            <span id="detailSubtotal">₦0</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Delivery</span>
+                            <span id="detailDelivery">₦0</span>
+                        </div>
+                        <div class="detail-row total">
+                            <span>Total</span>
+                            <span id="detailTotal">₦0</span>
+                        </div>
+                        <div class="detail-divider"></div>
+                        <div class="detail-row">
+                            <span>Delivery Method</span>
+                            <span id="detailDeliveryMethod">Pickup</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Phone</span>
+                            <span id="detailPhone">—</span>
+                        </div>
+                        <div class="detail-row" id="detailAddressRow">
+                            <span>Address</span>
+                            <span id="detailAddress">—</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== CLEAR CART CONFIRMATION MODAL ===== -->
+    <div class="modal-overlay" id="clearCartModal">
+        <div class="modal-box">
+            <div class="modal-icon">🗑️</div>
+            <h2>Clear Your Cart?</h2>
+            <p>Are you sure you want to remove all items from your cart?</p>
+            <div class="modal-info">
+                <i class="fas fa-info-circle"></i>
+                <span>This action cannot be undone. You'll lose all selected items.</span>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" id="cancelClearBtn">Cancel</button>
+                <button class="modal-btn confirm" id="confirmClearBtn">Yes, Clear Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TRACK ORDER MODAL ===== -->
+    <div class="track-modal-overlay" id="trackModal">
+        <div class="track-modal">
+            <button class="track-modal-close" id="trackModalClose">&times;</button>
+            <div class="track-modal-icon">📦</div>
+            <h2>Track Your Order</h2>
+            <p>Enter your order number to track its status</p>
+            <div class="track-form">
+                <input type="text" class="track-input" id="trackInput" placeholder="e.g. MB-260818-0251" maxlength="30">
+                <button class="track-btn" id="trackBtn">Track</button>
+            </div>
+            <div class="track-result" id="trackResult" style="display:none;">
+                <!-- Rendered by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            'use strict';
+
+            // ============================================
+            // CONFIGURATION
+            // ============================================
+
+            var API_URL = (function () {
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    return 'http://localhost:3000/api';
+                }
+                return '/api';
+            })();
+
+            // ============================================
+            // STATE
+            // ============================================
+
+            var cart = [];
+            var sessionId = localStorage.getItem('mabite_session_id') || null;
+            var currentStep = 'checkout';
+            var selectedPaymentMethod = 'cash';
+            var orderData = null;
+            var orderId = null;
+            var deliveryFee = 500;
+            var orderEventSource = null;
+            var isRestoringOrder = false;
+            var isOrderCompleted = false;
+            var pendingSync = false;
+            var syncQueue = [];
+
+            // ============================================
+            // DOM REFS
+            // ============================================
+
+            var cartItemsList = document.getElementById('cartItemsList');
+            var customerName = document.getElementById('customerName');
+            var customerPhone = document.getElementById('customerPhone');
+            var customerEmail = document.getElementById('customerEmail');
+            var deliveryToggle = document.querySelectorAll('.toggle-option');
+            var deliveryAddress = document.getElementById('deliveryAddress');
+            var deliveryStreet = document.getElementById('deliveryStreet');
+            var deliveryBuilding = document.getElementById('deliveryBuilding');
+            var deliveryLandmark = document.getElementById('deliveryLandmark');
+            var subtotalAmount = document.getElementById('subtotalAmount');
+            var deliveryFeeAmount = document.getElementById('deliveryFeeAmount');
+            var totalAmount = document.getElementById('totalAmount');
+            var continueToPaymentBtn = document.getElementById('continueToPaymentBtn');
+            var clearCartBtn = document.getElementById('clearCartBtn');
+
+            var stepCheckout = document.getElementById('stepCheckout');
+            var stepPayment = document.getElementById('stepPayment');
+            var stepStatus = document.getElementById('stepStatus');
+
+            var paymentOptions = document.getElementById('paymentOptions');
+            var bankTransferDetails = document.getElementById('bankTransferDetails');
+            var makePaymentBtn = document.getElementById('makePaymentBtn');
+            var backToCheckoutBtn = document.getElementById('backToCheckoutBtn');
+            var paymentBtnText = document.getElementById('paymentBtnText');
+            var paymentTotalAmount = document.getElementById('paymentTotalAmount');
+            var paymentItemCount = document.getElementById('paymentItemCount');
+
+            var statusIcon = document.getElementById('statusIcon');
+            var statusTitle = document.getElementById('statusTitle');
+            var statusSubtitle = document.getElementById('statusSubtitle');
+            var orderNumber = document.getElementById('orderNumber');
+            var orderAmount = document.getElementById('orderAmount');
+            var paymentStatusBadge = document.getElementById('paymentStatusBadge');
+            var statusDot = document.getElementById('statusDot');
+            var paymentStatusText = document.getElementById('paymentStatusText');
+            var orderTracker = document.getElementById('orderTracker');
+
+            var toggleDetailsBtn = document.getElementById('toggleDetailsBtn');
+            var orderDetailsPanel = document.getElementById('orderDetailsPanel');
+            var detailOrderNumber = document.getElementById('detailOrderNumber');
+            var detailItems = document.getElementById('detailItems');
+            var detailSubtotal = document.getElementById('detailSubtotal');
+            var detailDelivery = document.getElementById('detailDelivery');
+            var detailTotal = document.getElementById('detailTotal');
+            var detailDeliveryMethod = document.getElementById('detailDeliveryMethod');
+            var detailPhone = document.getElementById('detailPhone');
+            var detailAddress = document.getElementById('detailAddress');
+
+            var cartCountTop = document.getElementById('cartCountTop');
+            var copyOrderBtn = document.getElementById('copyOrderBtn');
+            var downloadReceiptBtn = document.getElementById('downloadReceiptBtn');
+            var backToMenuBtn = document.getElementById('backToMenuBtn');
+
+            // Clear Cart Modal
+            var clearCartModal = document.getElementById('clearCartModal');
+            var cancelClearBtn = document.getElementById('cancelClearBtn');
+            var confirmClearBtn = document.getElementById('confirmClearBtn');
+
+            // Track Order Modal
+            var trackModal = document.getElementById('trackModal');
+            var trackModalClose = document.getElementById('trackModalClose');
+            var trackInput = document.getElementById('trackInput');
+            var trackBtn = document.getElementById('trackBtn');
+            var trackResult = document.getElementById('trackResult');
+
+            // Error message elements
+            var nameError = document.getElementById('nameError');
+            var phoneError = document.getElementById('phoneError');
+            var streetError = document.getElementById('streetError');
+            var buildingError = document.getElementById('buildingError');
+            var bankNameError = document.getElementById('bankNameError');
+
+            // ============================================
+            // EMOJI HELPER
+            // ============================================
+
+            function getEmojiForItem(name) {
+                var lowerName = name.toLowerCase();
+                if (lowerName.includes('shawarma') || lowerName.includes('sharwama')) return '🌯';
+                if (lowerName.includes('chicken') && lowerName.includes('fries')) return '🍗';
+                if (lowerName.includes('chicken')) return '🍗';
+                if (lowerName.includes('fries')) return '🍟';
+                if (lowerName.includes('barbeque') || lowerName.includes('bbq')) return '🔥';
+                if (lowerName.includes('parfait')) return '🍨';
+                if (lowerName.includes('dessert')) return '🍨';
+                if (lowerName.includes('zobo')) return '🥤';
+                if (lowerName.includes('drink')) return '🥤';
+                return '🍽️';
+            }
+
+            // ============================================
+            // SESSION MANAGEMENT
+            // ============================================
+
+            function getSessionId() {
+                if (!sessionId) {
+                    sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('mabite_session_id', sessionId);
+                }
+                return sessionId;
+            }
+
+            // ============================================
+            // VALIDATION HELPERS
+            // ============================================
+
+            function validatePhoneNumber(phone) {
+                var cleaned = phone.replace(/\s/g, '');
+                var patterns = [
+                    /^0[789][01]\d{8}$/,
+                    /^[789][01]\d{8}$/,
+                    /^\+234[789][01]\d{8}$/,
+                    /^234[789][01]\d{8}$/
+                ];
+                return patterns.some(function (pattern) { return pattern.test(cleaned); });
+            }
+
+            function sanitizeInput(input) {
+                if (!input) return '';
+                return input.replace(/[<>]/g, '');
+            }
+
+            // ============================================
+            // GET IMAGE HTML
+            // ============================================
+
+            function getImageHtml(item) {
+                var hasImage = item.image &&
+                    item.image.trim() !== '' &&
+                    item.image !== 'null' &&
+                    item.image !== 'undefined';
+
+                if (hasImage) {
+                    var imageValue = item.image.trim();
+                    var imageUrl = null;
+
+                    if (imageValue.startsWith('data:image/')) {
+                        try {
+                            var parts = imageValue.split(',');
+                            if (parts.length === 2 && parts[1] && parts[1].length > 100) {
+                                imageUrl = imageValue;
+                            } else {
+                                imageUrl = null;
+                            }
+                        } catch (e) {
+                            imageUrl = null;
+                        }
+                    } else if (imageValue.startsWith('http://') || imageValue.startsWith('https://')) {
+                        imageUrl = imageValue;
+                    } else {
+                        if (imageValue.startsWith('/')) {
+                            imageUrl = imageValue;
+                        } else {
+                            imageUrl = '/uploads/' + imageValue;
+                        }
+                    }
+
+                    if (imageUrl) {
+                        return `
+                            <div class="item-thumb">
+                                <img src="${imageUrl}" alt="${item.name}" class="cart-item-img" 
+                                     onerror="this.style.display='none'; this.parentElement.textContent='${getEmojiForItem(item.name) || '🍽️'}'">
+                            </div>
+                        `;
+                    }
+                }
+
+                var emoji = getEmojiForItem(item.name) || '🍽️';
+                return `<div class="item-thumb emoji-thumb">${emoji}</div>`;
+            }
+
+            // ============================================
+            // VALIDATION
+            // ============================================
+
+            function validateCheckout() {
+                var isValid = true;
+
+                var name = sanitizeInput(customerName?.value?.trim());
+                if (!name || name.length < 2) {
+                    nameError.textContent = 'Please enter your full name (at least 2 characters)';
+                    nameError.style.display = 'block';
+                    customerName.style.borderColor = '#e74c3c';
+                    isValid = false;
+                } else {
+                    nameError.style.display = 'none';
+                    customerName.style.borderColor = '';
+                }
+
+                var phone = customerPhone?.value?.trim();
+                if (!phone || !validatePhoneNumber(phone)) {
+                    phoneError.textContent = 'Please enter a valid Nigerian phone number (e.g. 080 1234 5678)';
+                    phoneError.style.display = 'block';
+                    customerPhone.style.borderColor = '#e74c3c';
+                    isValid = false;
+                } else {
+                    phoneError.style.display = 'none';
+                    customerPhone.style.borderColor = '';
+                }
+
+                var isDelivery = document.querySelector('.toggle-option.active')?.dataset.value === 'delivery';
+                if (isDelivery) {
+                    var street = sanitizeInput(deliveryStreet?.value?.trim());
+                    var building = sanitizeInput(deliveryBuilding?.value?.trim());
+
+                    if (!street || street.length < 2) {
+                        streetError.textContent = 'Please enter your street/area (at least 2 characters)';
+                        streetError.style.display = 'block';
+                        deliveryStreet.style.borderColor = '#e74c3c';
+                        isValid = false;
+                    } else {
+                        streetError.style.display = 'none';
+                        deliveryStreet.style.borderColor = '';
+                    }
+
+                    if (!building || building.length < 1) {
+                        buildingError.textContent = 'Please enter your building/house number';
+                        buildingError.style.display = 'block';
+                        deliveryBuilding.style.borderColor = '#e74c3c';
+                        isValid = false;
+                    } else {
+                        buildingError.style.display = 'none';
+                        deliveryBuilding.style.borderColor = '';
+                    }
+                }
+
+                return isValid;
+            }
+
+            function validateBankTransfer() {
+                var bankName = sanitizeInput(document.getElementById('transferReference')?.value?.trim());
+                if (!bankName || bankName.length < 2) {
+                    bankNameError.textContent = 'Please enter your confirmation name (at least 2 characters)';
+                    bankNameError.style.display = 'block';
+                    document.getElementById('transferReference').style.borderColor = '#e74c3c';
+                    return false;
+                } else {
+                    bankNameError.style.display = 'none';
+                    document.getElementById('transferReference').style.borderColor = '';
+                    return true;
+                }
+            }
+
+            // ============================================
+            // TOGGLE DETAILS VISIBILITY
+            // ============================================
+
+            function toggleDetailsVisibility() {
+                var detailsSection = document.querySelector('.details-section');
+                var deliverySection = document.querySelector('.delivery-section');
+                var orderSummary = document.querySelector('.order-summary');
+                var continueBtn = document.getElementById('continueToPaymentBtn');
+                var clearBtn = document.getElementById('clearCartBtn');
+
+                var hasItems = cart.length > 0;
+
+                if (detailsSection) detailsSection.style.display = hasItems ? 'block' : 'none';
+                if (deliverySection) deliverySection.style.display = hasItems ? 'block' : 'none';
+                if (orderSummary) orderSummary.style.display = hasItems ? 'block' : 'none';
+                if (continueBtn) continueBtn.style.display = hasItems ? 'flex' : 'none';
+                if (clearBtn) clearBtn.style.display = hasItems ? 'flex' : 'none';
+            }
+
+            // ============================================
+            // LOAD CART FROM DATABASE
+            // ============================================
+
+            function loadCart() {
+                var sessionId = getSessionId();
+
+                fetch(API_URL + '/cart', {
+                    headers: {
+                        'X-Session-Id': sessionId
+                    }
+                })
+                    .then(function (response) { return response.json(); })
+                    .then(function (result) {
+                        if (result.success && result.data) {
+                            cart = result.data.items.map(function (item) {
+                                var cleanImage = item.image;
+                                if (cleanImage && cleanImage.startsWith('data:image/')) {
+                                    try {
+                                        var parts = cleanImage.split(',');
+                                        if (parts.length < 2 || !parts[1] || parts[1].length < 100) {
+                                            cleanImage = null;
+                                        }
+                                    } catch (e) {
+                                        cleanImage = null;
+                                    }
+                                }
+
+                                return {
+                                    id: item.productId,
+                                    name: item.name,
+                                    price: item.price,
+                                    image: cleanImage || null,
+                                    quantity: item.quantity
+                                };
+                            });
+
+                            if (result.data.sessionId) {
+                                sessionId = result.data.sessionId;
+                                localStorage.setItem('mabite_session_id', sessionId);
+                            }
+
+                            renderCartItems();
+                            updateOrderSummary();
+                            updateCartCount();
+                            toggleDetailsVisibility();
+                        }
+                    })
+                    .catch(function (error) {
+                        console.warn('⚠️ Failed to load cart from database:', error);
+                        var savedCart = localStorage.getItem('mabite_cart_backup');
+                        if (savedCart) {
+                            try {
+                                cart = JSON.parse(savedCart);
+                                renderCartItems();
+                                updateOrderSummary();
+                                updateCartCount();
+                                toggleDetailsVisibility();
+                            } catch (e) {
+                                cart = [];
+                                renderCartItems();
+                            }
+                        } else {
+                            cart = [];
+                            renderCartItems();
+                        }
+                    });
+            }
+
+            // ============================================
+            // SAVE CART TO DATABASE - OPTIMIZED VERSION
+            // ============================================
+
+            function saveCart() {
+                var sessionId = getSessionId();
+
+                // Always update local backup
+                localStorage.setItem('mabite_cart_backup', JSON.stringify(cart));
+
+                // Debounce sync to avoid race conditions
+                if (pendingSync) {
+                    // Queue the latest state and return
+                    syncQueue.push(Date.now());
+                    return;
+                }
+
+                pendingSync = true;
+
+                // Wait a short moment to batch rapid changes
+                setTimeout(function () {
+                    pendingSync = false;
+
+                    // Check if there are more queued syncs
+                    if (syncQueue.length > 0) {
+                        syncQueue = [];
+                        // Call saveCart again to sync the latest state
+                        saveCart();
+                        return;
+                    }
+
+                    // Perform the actual sync
+                    performCartSync(sessionId);
+                }, 100);
+            }
+
+            function performCartSync(sessionId) {
+                // First, clear the entire cart for this session
+                fetch(API_URL + '/cart/clear?sessionId=' + encodeURIComponent(sessionId), {
+                    method: 'DELETE'
+                })
+                    .then(function () {
+                        // If cart is empty, we're done
+                        if (cart.length === 0) return;
+
+                        // Add all current items in a single batch
+                        var batchPromises = cart.map(function (item) {
+                            return fetch(API_URL + '/cart/add', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    productId: item.id,
+                                    name: item.name,
+                                    price: item.price,
+                                    quantity: item.quantity,
+                                    image: item.image || null,
+                                    sessionId: sessionId
+                                })
+                            });
+                        });
+
+                        return Promise.all(batchPromises);
+                    })
+                    .catch(function (error) {
+                        console.warn('⚠️ Failed to sync cart to database:', error);
+                        // If sync fails, we have the local backup
+                    });
+            }
+
+            // ============================================
+            // CART FUNCTIONS
+            // ============================================
+
+            function updateQuantity(id, delta) {
+                var item = cart.find(function (i) { return i.id === id; });
+                if (!item) return;
+
+                item.quantity += delta;
+
+                if (item.quantity <= 0) {
+                    cart = cart.filter(function (i) { return i.id !== id; });
+                }
+
+                // Update UI immediately
+                renderCartItems();
+                updateOrderSummary();
+                updateCartCount();
+                toggleDetailsVisibility();
+
+                // Save asynchronously
+                saveCart();
+            }
+
+            function removeItem(id) {
+                cart = cart.filter(function (i) { return i.id !== id; });
+
+                // Update UI immediately
+                renderCartItems();
+                updateOrderSummary();
+                updateCartCount();
+                toggleDetailsVisibility();
+
+                // Save asynchronously
+                saveCart();
+            }
+
+            function getCartTotal() {
+                var total = 0;
+                for (var i = 0; i < cart.length; i++) {
+                    total += cart[i].price * cart[i].quantity;
+                }
+                return total;
+            }
+
+            function getCartCount() {
+                var count = 0;
+                for (var i = 0; i < cart.length; i++) {
+                    count += cart[i].quantity;
+                }
+                return count;
+            }
+
+            function updateCartCount() {
+                var count = getCartCount();
+                if (cartCountTop) cartCountTop.textContent = count;
+            }
+
+            // ============================================
+            // RENDER CART ITEMS
+            // ============================================
+
+            function renderCartItems() {
+                if (!cartItemsList) return;
+
+                if (cart.length === 0) {
+                    if (isOrderCompleted) {
+                        cartItemsList.innerHTML = `
+                            <div class="empty-cart-message">
+                                <i class="fas fa-check-circle"></i>
+                                <p>Your order has been placed!</p>
+                                <span>Track your order or browse our menu</span>
+                                <div class="empty-cart-actions">
+                                    <a href="index.html" class="btn-empty-cart">Browse Menu</a>
+                                    <button class="btn-track-order" id="emptyTrackOrderBtn">Track Order</button>
+                                </div>
+                            </div>
+                        `;
+                        var trackBtn = document.getElementById('emptyTrackOrderBtn');
+                        if (trackBtn) {
+                            trackBtn.addEventListener('click', function () {
+                                openTrackOrderModal();
+                            });
+                        }
+                    } else {
+                        cartItemsList.innerHTML = `
+                            <div class="empty-cart-message">
+                                <i class="fas fa-box-open"></i>
+                                <p>Your cart is empty</p>
+                                <span>Add some delicious items from the menu</span>
+                                <div class="empty-cart-actions">
+                                    <a href="index.html" class="btn-empty-cart">Browse Menu</a>
+                                    <button class="btn-track-order" id="emptyTrackOrderBtn">Track Order</button>
+                                </div>
+                            </div>
+                        `;
+                        var trackBtn = document.getElementById('emptyTrackOrderBtn');
+                        if (trackBtn) {
+                            trackBtn.addEventListener('click', function () {
+                                openTrackOrderModal();
+                            });
+                        }
+                    }
+                    toggleDetailsVisibility();
+                    return;
+                }
+
+                var html = '';
+                for (var i = 0; i < cart.length; i++) {
+                    var item = cart[i];
+                    var imageHtml = getImageHtml(item);
+
+                    html += `
+                        <div class="cart-item-checkout" data-id="${item.id}">
+                            ${imageHtml}
+                            <div class="item-details">
+                                <div class="item-name">${sanitizeInput(item.name)}</div>
+                                <div class="item-price">₦${(item.price * item.quantity).toLocaleString()}</div>
+                            </div>
+                            <div class="item-controls">
+                                <button class="qty-btn" onclick="window._cartJS.updateQty('${item.id}', -1)">−</button>
+                                <span class="qty-number">${item.quantity}</span>
+                                <button class="qty-btn" onclick="window._cartJS.updateQty('${item.id}', 1)">+</button>
+                            </div>
+                            <button class="item-remove-btn" onclick="window._cartJS.removeItem('${item.id}')">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    `;
+                }
+
+                cartItemsList.innerHTML = html;
+                toggleDetailsVisibility();
+            }
+
+            // ============================================
+            // TRACK ORDER MODAL
+            // ============================================
+
+            function openTrackOrderModal() {
+                trackModal.classList.add('open');
+                trackInput.value = '';
+                trackResult.style.display = 'none';
+                trackResult.innerHTML = '';
+                document.body.style.overflow = 'hidden';
+                setTimeout(function () { trackInput.focus(); }, 100);
+            }
+
+            function closeTrackOrderModal() {
+                trackModal.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            function trackOrder() {
+                var orderNum = trackInput.value.trim();
+                if (!orderNum) {
+                    trackResult.style.display = 'block';
+                    trackResult.innerHTML = `
+                        <div class="track-error">
+                            <span class="track-error-icon">⚠️</span>
+                            <p>Please enter your order number</p>
+                            <small>You can find it on your receipt or confirmation email</small>
+                        </div>
+                    `;
+                    return;
+                }
+
+                orderNum = orderNum.replace(/^#/, '');
+
+                trackBtn.disabled = true;
+                trackBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching...';
+                trackResult.style.display = 'block';
+                trackResult.innerHTML = `
+                    <div class="track-loading">
+                        <span class="track-loading-spinner">⏳</span>
+                        <p>Searching for your order...</p>
+                        <small>Please wait</small>
+                    </div>
+                `;
+
+                fetch(API_URL + '/orders/track/' + encodeURIComponent(orderNum))
+                    .then(function (response) {
+                        if (!response.ok) {
+                            if (response.status === 404) {
+                                throw new Error('ORDER_NOT_FOUND');
+                            }
+                            throw new Error('SERVER_ERROR');
+                        }
+                        return response.json();
+                    })
+                    .then(function (result) {
+                        if (result.success && result.data) {
+                            var order = result.data;
+                            renderTrackResult(order);
+                            showToast('Order found! 🎉', 'success');
+                        } else {
+                            throw new Error('ORDER_NOT_FOUND');
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Track order error:', error);
+
+                        var errorMessage = '';
+                        var errorIcon = '🔍';
+                        var errorDetail = '';
+
+                        if (error.message === 'ORDER_NOT_FOUND') {
+                            errorMessage = 'Order not found. Please check your order number.';
+                            errorIcon = '🔍';
+                            errorDetail = 'Make sure you enter it exactly as shown on your receipt.';
+                        } else if (error.message === 'SERVER_ERROR') {
+                            errorMessage = 'Unable to check your order right now.';
+                            errorIcon = '⚠️';
+                            errorDetail = 'Please try again in a few moments.';
+                        } else {
+                            errorMessage = 'Something went wrong. Please try again.';
+                            errorIcon = '⚠️';
+                            errorDetail = 'If the problem persists, contact our support team.';
+                        }
+
+                        trackResult.innerHTML = `
+                            <div class="track-error">
+                                <span class="track-error-icon">${errorIcon}</span>
+                                <p>${errorMessage}</p>
+                                <small>${errorDetail}</small>
+                            </div>
+                        `;
+                        showToast(errorMessage, 'error');
+                    })
+                    .finally(function () {
+                        trackBtn.disabled = false;
+                        trackBtn.innerHTML = 'Track';
+                    });
+            }
+
+            function renderTrackResult(order) {
+                var statusMap = {
+                    'pending': '⏳ Pending',
+                    'confirmed': '✅ Confirmed',
+                    'preparing': '🔥 Preparing',
+                    'ready': '🛍️ Ready',
+                    'delivered': '🎉 Delivered',
+                    'cancelled': '❌ Cancelled'
+                };
+                var statusClass = order.status || 'pending';
+
+                var displayOrderNum = order.orderNumber || order.orderNumber || 'N/A';
+
+                var trackerHtml = '';
+                var statuses = ['pending', 'confirmed', 'preparing', 'ready', 'delivered'];
+                var currentIndex = statuses.indexOf(order.status);
+                if (currentIndex === -1) currentIndex = 0;
+
+                for (var i = 0; i < statuses.length; i++) {
+                    var isActive = i === currentIndex;
+                    var isDone = i < currentIndex;
+                    var label = statuses[i].charAt(0).toUpperCase() + statuses[i].slice(1);
+
+                    trackerHtml += `
+                        <div class="step-mini">
+                            <div class="dot ${isDone ? 'done' : (isActive ? 'active' : '')}"></div>
+                            <div class="label ${isDone ? 'done' : (isActive ? 'active' : '')}">${label}</div>
+                        </div>
+                        ${i < statuses.length - 1 ? `<div class="tracker-line-mini ${isDone ? 'done' : ''}"></div>` : ''}
+                    `;
+                }
+
+                var itemsHtml = '';
+                var items = order.items || [];
+                for (var j = 0; j < items.length; j++) {
+                    var item = items[j];
+                    itemsHtml += `
+                        <div class="row">
+                            <span>${item.quantity} × ${sanitizeInput(item.name)}</span>
+                            <span>₦${(item.unitPrice * item.quantity).toLocaleString()}</span>
+                        </div>
+                    `;
+                }
+
+                trackResult.innerHTML = `
+                    <div class="track-result-card">
+                        <div class="order-header">
+                            <span class="order-number">${displayOrderNum}</span>
+                            <span class="order-status-badge ${statusClass}">${statusMap[order.status] || order.status}</span>
+                        </div>
+                        <div class="order-details-mini">
+                            <div class="row">
+                                <span>Customer</span>
+                                <span>${sanitizeInput(order.customer?.name || 'Guest')}</span>
+                            </div>
+                            <div class="row">
+                                <span>Phone</span>
+                                <span>${order.customer?.phone || 'N/A'}</span>
+                            </div>
+                            <div class="row">
+                                <span>Total</span>
+                                <span>₦${(order.total || 0).toLocaleString()}</span>
+                            </div>
+                            <div class="row">
+                                <span>Delivery</span>
+                                <span>${order.delivery?.isDelivery ? '🚚 Delivery' : '🏪 Pickup'}</span>
+                            </div>
+                            <div class="row" style="border-top:1px solid #e0dad3;padding-top:8px;margin-top:4px;font-weight:600;">
+                                <span>Items</span>
+                                <span>${items.length} item${items.length > 1 ? 's' : ''}</span>
+                            </div>
+                            ${itemsHtml}
+                        </div>
+                        <div class="tracker-mini">
+                            <div class="tracker-steps-mini">
+                                ${trackerHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // ============================================
+            // TOAST NOTIFICATION
+            // ============================================
+
+            function showToast(message, type) {
+                type = type || 'success';
+                var existing = document.querySelector('.customer-toast');
+                if (existing) existing.remove();
+
+                var toast = document.createElement('div');
+                toast.className = 'customer-toast ' + type;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+
+                setTimeout(function () {
+                    toast.classList.add('show');
+                }, 10);
+
+                setTimeout(function () {
+                    toast.classList.remove('show');
+                    setTimeout(function () { toast.remove(); }, 300);
+                }, 3000);
+            }
+
+            // ============================================
+            // STEP NAVIGATION
+            // ============================================
+
+            function goToStep(step) {
+                currentStep = step;
+
+                stepCheckout.style.display = step === 'checkout' ? 'block' : 'none';
+                stepPayment.style.display = step === 'payment' ? 'block' : 'none';
+                stepStatus.style.display = step === 'status' ? 'block' : 'none';
+
+                if (step === 'payment') {
+                    renderPaymentOptions();
+                }
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // ============================================
+            // PAYMENT OPTIONS
+            // ============================================
+
+            function renderPaymentOptions() {
+                var total = orderData ? orderData.total : 0;
+                var itemCount = orderData ? orderData.items.length : 0;
+
+                if (paymentTotalAmount) paymentTotalAmount.textContent = '₦' + total.toLocaleString();
+                if (paymentItemCount) paymentItemCount.textContent = itemCount + ' items';
+
+                var transferAmount = document.getElementById('transferAmount');
+                if (transferAmount) {
+                    transferAmount.value = '₦' + total.toLocaleString();
+                }
+
+                var isDelivery = orderData ? orderData.delivery.isDelivery : false;
+                var cashLabel = isDelivery ? 'Cash on Delivery' : 'Cash on Pickup';
+                var cashDesc = isDelivery ? 'Pay when your order arrives' : 'Pay when you collect your order';
+
+                var optionsHtml = '';
+                optionsHtml += `
+                    <div class="payment-option" data-method="cash" onclick="window._cartJS.selectPaymentMethod('cash')">
+                        <div class="payment-option-radio">
+                            <span class="radio-circle"></span>
+                        </div>
+                        <div class="payment-option-content">
+                            <div class="payment-option-title">${cashLabel}</div>
+                            <div class="payment-option-desc">${cashDesc}</div>
+                        </div>
+                    </div>
+                    <div class="payment-option" data-method="bank-transfer" onclick="window._cartJS.selectPaymentMethod('bank-transfer')">
+                        <div class="payment-option-radio">
+                            <span class="radio-circle"></span>
+                        </div>
+                        <div class="payment-option-content">
+                            <div class="payment-option-title">Bank Transfer</div>
+                            <div class="payment-option-desc">Pay via bank transfer</div>
+                        </div>
+                    </div>
+                `;
+
+                paymentOptions.innerHTML = optionsHtml;
+                selectPaymentMethod('cash');
+                updatePaymentButton();
+            }
+
+            function selectPaymentMethod(method) {
+                selectedPaymentMethod = method;
+
+                var options = paymentOptions.querySelectorAll('.payment-option');
+                options.forEach(function (opt) {
+                    opt.classList.toggle('selected', opt.dataset.method === method);
+                });
+
+                if (bankTransferDetails) {
+                    bankTransferDetails.style.display = method === 'bank-transfer' ? 'block' : 'none';
+                }
+
+                updatePaymentButton();
+            }
+
+            function updatePaymentButton() {
+                var isCash = selectedPaymentMethod === 'cash';
+                if (paymentBtnText) {
+                    paymentBtnText.textContent = isCash ? 'Confirm Order' : 'Confirm Bank Transfer';
+                }
+            }
+
+            // ============================================
+            // CONTINUE TO PAYMENT
+            // ============================================
+
+            function continueToPayment() {
+                if (cart.length === 0) {
+                    showToast('Your cart is empty!', 'error');
+                    return;
+                }
+
+                if (!validateCheckout()) {
+                    showToast('Please fill in all required fields correctly.', 'error');
+                    return;
+                }
+
+                var name = sanitizeInput(customerName?.value?.trim());
+                var phone = customerPhone?.value?.trim();
+                var isDelivery = document.querySelector('.toggle-option.active')?.dataset.value === 'delivery';
+
+                var address = '';
+                if (isDelivery) {
+                    var landmark = sanitizeInput(deliveryLandmark?.value?.trim() || '');
+                    address = (sanitizeInput(deliveryStreet?.value || '') + ', ' + sanitizeInput(deliveryBuilding?.value || ''));
+                    if (landmark) address += ', ' + landmark;
+                }
+
+                var subtotal = getCartTotal();
+                var fee = isDelivery ? deliveryFee : 0;
+                var total = subtotal + fee;
+
+                orderData = {
+                    customer: {
+                        name: name,
+                        phone: phone,
+                        email: sanitizeInput(customerEmail?.value?.trim() || '')
+                    },
+                    delivery: {
+                        isDelivery: isDelivery,
+                        address: address
+                    },
+                    items: cart.map(function (item) {
+                        return {
+                            productId: item.id,
+                            name: sanitizeInput(item.name),
+                            quantity: item.quantity,
+                            unitPrice: item.price
+                        };
+                    }),
+                    subtotal: subtotal,
+                    deliveryFee: fee,
+                    total: total,
+                    payment: {
+                        method: selectedPaymentMethod,
+                        status: 'pending',
+                        confirmationName: '' // Will be filled in makePayment
+                    },
+                    status: 'pending'
+                };
+
+                goToStep('payment');
+            }
+
+            // ============================================
+            // BACK TO CHECKOUT FROM PAYMENT
+            // ============================================
+
+            function goBackToCheckout() {
+                goToStep('checkout');
+            }
+
+            // ============================================
+            // CLEAR CART CONFIRMATION
+            // ============================================
+
+            function openClearCartModal() {
+                if (cart.length === 0) {
+                    showToast('Your cart is already empty!', 'info');
+                    return;
+                }
+                clearCartModal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeClearCartModal() {
+                clearCartModal.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            function clearCart() {
+                cart = [];
+
+                // Update UI immediately
+                renderCartItems();
+                updateOrderSummary();
+                updateCartCount();
+                toggleDetailsVisibility();
+
+                // Sync with database
+                saveCart();
+
+                closeClearCartModal();
+                // Toast notification removed as requested
+            }
+
+            // ============================================
+            // MAKE PAYMENT - CREATE ORDER (NO AUTO-CONFIRM)
+            // ============================================
+
+            function makePayment() {
+                var isCash = selectedPaymentMethod === 'cash';
+                var isBankTransfer = selectedPaymentMethod === 'bank-transfer';
+
+                // Get confirmation name for bank transfer
+                var confirmationName = '';
+                if (isBankTransfer) {
+                    if (!validateBankTransfer()) {
+                        showToast('Please enter your confirmation name.', 'error');
+                        return;
+                    }
+                    confirmationName = sanitizeInput(document.getElementById('transferReference')?.value?.trim() || '');
+                }
+
+                var btn = makePaymentBtn;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating order...';
+
+                // Add confirmation name to order data
+                orderData.payment.confirmationName = confirmationName;
+                orderData.payment.method = selectedPaymentMethod;
+
+                fetch(API_URL + '/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                })
+                    .then(function (response) {
+                        if (!response.ok) {
+                            throw new Error('Order creation failed: ' + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(function (result) {
+                        if (result.success) {
+                            var order = result.data.order;
+                            orderData.orderNumber = order.orderNumber;
+                            orderData._id = order._id;
+                            orderId = order._id;
+
+                            localStorage.setItem('mabite_pending_order', JSON.stringify({
+                                orderNumber: order.orderNumber,
+                                orderId: order._id,
+                                orderData: orderData,
+                                timestamp: Date.now()
+                            }));
+
+                            localStorage.setItem('mabite_last_order', JSON.stringify({
+                                orderNumber: orderData.orderNumber,
+                                orderId: orderData._id,
+                                orderData: orderData,
+                                paymentMethod: selectedPaymentMethod,
+                                timestamp: Date.now()
+                            }));
+
+                            btn.disabled = false;
+                            btn.innerHTML = paymentBtnText.textContent;
+
+                            isOrderCompleted = true;
+                            cart = [];
+
+                            // Save empty cart
+                            localStorage.setItem('mabite_cart_backup', JSON.stringify(cart));
+                            // Sync empty cart with database
+                            performCartSync(getSessionId());
+
+                            localStorage.removeItem('mabite_pending_order');
+
+                            showToast('✅ Order #' + order.orderNumber + ' created! Awaiting confirmation.', 'success');
+
+                            goToStatus();
+
+                        } else {
+                            throw new Error(result.message || 'Order creation failed');
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('❌ Order creation error:', error);
+                        showToast(error.message || 'Order failed. Please try again.', 'error');
+                        btn.disabled = false;
+                        btn.innerHTML = paymentBtnText.textContent;
+                    });
+            }
+
+            // ============================================
+            // FETCH ORDER STATUS FROM SERVER
+            // ============================================
+
+            function fetchOrderStatus(orderId) {
+                fetch(API_URL + '/orders/' + orderId)
+                    .then(function (response) {
+                        if (!response.ok) {
+                            if (response.status === 404) {
+                                console.warn('⚠️ Order not found on server, using local data');
+                                goToStatus();
+                                return;
+                            }
+                            throw new Error('Server error: ' + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(function (result) {
+                        if (result.success && result.data) {
+                            var order = result.data;
+                            orderData.status = order.status || orderData.status;
+                            orderData.payment = order.payment || orderData.payment;
+                            orderData.total = order.total || orderData.total;
+                            orderData.subtotal = order.subtotal || orderData.subtotal;
+                            orderData.deliveryFee = order.deliveryFee || orderData.deliveryFee;
+                            orderData.items = order.items || orderData.items;
+                            orderData.orderNumber = order.orderNumber || orderData.orderNumber;
+
+                            localStorage.setItem('mabite_last_order', JSON.stringify({
+                                orderNumber: orderData.orderNumber,
+                                orderId: orderId,
+                                orderData: orderData,
+                                paymentMethod: selectedPaymentMethod,
+                                timestamp: Date.now()
+                            }));
+
+                            goToStatus();
+                        } else {
+                            goToStatus();
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('❌ Fetch order error:', error);
+                        goToStatus();
+                    });
+            }
+
+            // ============================================
+            // GO TO STATUS
+            // ============================================
+
+            function goToStatus() {
+                var isCash = selectedPaymentMethod === 'cash' || selectedPaymentMethod === 'bank-transfer';
+                var total = orderData.total || 0;
+                var subtotal = orderData.subtotal || 0;
+                var fee = orderData.deliveryFee || 0;
+                var status = orderData.status || 'pending';
+
+                updateStatusUI(status, isCash, total, subtotal, fee);
+
+                var orderNum = orderData.orderNumber || 'MAB' + Date.now().toString().slice(-6);
+                orderNumber.textContent = '#' + orderNum;
+                orderAmount.textContent = '₦' + total.toLocaleString();
+
+                renderTracker(isCash, getStatusIndex(status));
+                renderOrderDetails(orderNum, subtotal, fee, total, isCash);
+
+                var timeEl = document.getElementById('statusTime');
+                if (timeEl) {
+                    timeEl.textContent = new Date().toLocaleTimeString();
+                }
+
+                localStorage.setItem('mabite_last_order', JSON.stringify({
+                    orderNumber: orderNum,
+                    orderId: orderData._id,
+                    orderData: orderData,
+                    paymentMethod: selectedPaymentMethod,
+                    timestamp: Date.now()
+                }));
+
+                goToStep('status');
+
+                if (orderData._id) {
+                    console.log('📡 Connecting SSE for order:', orderData._id);
+                    connectOrderSSE(orderData._id);
+                } else {
+                    console.warn('⚠️ No order ID available for SSE connection');
+                }
+            }
+
+            // ============================================
+            // GET STATUS INDEX
+            // ============================================
+
+            function getStatusIndex(status) {
+                var statuses = ['pending', 'confirmed', 'preparing', 'ready', 'delivered', 'cancelled'];
+                var index = statuses.indexOf(status);
+                return index !== -1 ? index : 0;
+            }
+
+            // ============================================
+            // UPDATE STATUS UI
+            // ============================================
+
+            function updateStatusUI(status, isCash, total, subtotal, fee) {
+                var statusIcons = {
+                    'pending': '📝',
+                    'confirmed': '✅',
+                    'preparing': '🔥',
+                    'ready': '🛍️',
+                    'delivered': '🎉',
+                    'cancelled': '❌'
+                };
+
+                var statusLabels = {
+                    'pending': 'Order Received!',
+                    'confirmed': 'Order Confirmed!',
+                    'preparing': 'Being Prepared',
+                    'ready': 'Ready for Pickup',
+                    'delivered': 'Order Delivered!',
+                    'cancelled': 'Order Cancelled'
+                };
+
+                var statusSubs = {
+                    'pending': 'Your order has been received and is pending confirmation. We will notify you once confirmed.',
+                    'confirmed': 'Your order has been confirmed.',
+                    'preparing': 'Our chefs are preparing your order.',
+                    'ready': 'Your order is ready for pickup/delivery.',
+                    'delivered': 'Your order has been delivered. Enjoy!',
+                    'cancelled': 'Your order has been cancelled.'
+                };
+
+                statusIcon.textContent = statusIcons[status] || '📝';
+                statusTitle.textContent = statusLabels[status] || 'Order ' + status;
+                statusSubtitle.textContent = statusSubs[status] || 'Your order is ' + status;
+
+                var isPaid = orderData.payment && orderData.payment.status === 'paid';
+
+                if (status === 'cancelled') {
+                    statusDot.className = 'status-dot cancelled';
+                    paymentStatusText.textContent = '❌ Cancelled';
+                    paymentStatusBadge.className = 'payment-status-badge cancelled';
+                } else if (status === 'pending') {
+                    statusDot.className = 'status-dot pending';
+                    paymentStatusText.textContent = '⏳ Pending Confirmation';
+                    paymentStatusBadge.className = 'payment-status-badge pending';
+                } else if (isCash) {
+                    statusDot.className = 'status-dot pending';
+                    var paymentLabel = status === 'delivered' ? 'Delivered' :
+                        (status === 'confirmed' ? 'Confirmed' :
+                            (status === 'preparing' ? 'Preparing' :
+                                (status === 'ready' ? 'Ready' : 'Pending')));
+                    paymentStatusText.textContent = 'Payment — ' + paymentLabel;
+                    paymentStatusBadge.className = 'payment-status-badge pending';
+                } else if (isPaid) {
+                    statusDot.className = 'status-dot paid';
+                    paymentStatusText.textContent = '✅ Paid';
+                    paymentStatusBadge.className = 'payment-status-badge paid';
+                } else {
+                    statusDot.className = 'status-dot pending';
+                    paymentStatusText.textContent = '⏳ Pending Payment';
+                    paymentStatusBadge.className = 'payment-status-badge pending';
+                }
+
+                var orderNum = orderData.orderNumber || 'MAB' + Date.now().toString().slice(-6);
+                orderNumber.textContent = '#' + orderNum;
+                orderAmount.textContent = '₦' + (total || 0).toLocaleString();
+
+                var statuses = ['pending', 'confirmed', 'preparing', 'ready', 'delivered'];
+                var currentIndex = statuses.indexOf(status) !== -1 ? statuses.indexOf(status) : 0;
+                renderTracker(isCash, currentIndex);
+
+                renderOrderDetails(orderNum, subtotal || 0, fee || 0, total || 0, isCash);
+            }
+
+            // ============================================
+            // RESTORE ORDER ON REFRESH
+            // ============================================
+
+            function restoreOrderOnRefresh() {
+                var savedOrder = localStorage.getItem('mabite_last_order');
+                if (!savedOrder) return;
+
+                try {
+                    var order = JSON.parse(savedOrder);
+                    var age = Date.now() - order.timestamp;
+                    if (age > 24 * 60 * 60 * 1000) {
+                        localStorage.removeItem('mabite_last_order');
+                        return;
+                    }
+
+                    console.log('🔄 Restoring order from refresh:', order.orderNumber);
+
+                    orderData = order.orderData;
+                    orderData._id = order.orderId;
+                    orderId = order.orderId;
+                    selectedPaymentMethod = order.paymentMethod || 'cash';
+                    isRestoringOrder = true;
+
+                    fetch(API_URL + '/orders/' + orderId)
+                        .then(function (response) { return response.json(); })
+                        .then(function (result) {
+                            if (result.success && result.data) {
+                                var freshOrder = result.data;
+                                orderData.status = freshOrder.status || orderData.status;
+                                orderData.payment = freshOrder.payment || orderData.payment;
+                                orderData.total = freshOrder.total || orderData.total;
+                                orderData.subtotal = freshOrder.subtotal || orderData.subtotal;
+                                orderData.deliveryFee = freshOrder.deliveryFee || orderData.deliveryFee;
+                                orderData.items = freshOrder.items || orderData.items;
+
+                                localStorage.setItem('mabite_last_order', JSON.stringify({
+                                    orderNumber: orderData.orderNumber,
+                                    orderId: orderId,
+                                    orderData: orderData,
+                                    paymentMethod: selectedPaymentMethod,
+                                    timestamp: Date.now()
+                                }));
+                            }
+                        })
+                        .catch(function (error) {
+                            console.warn('⚠️ Could not fetch fresh order data, using cached:', error);
+                        })
+                        .finally(function () {
+                            var isCash = selectedPaymentMethod === 'cash' || selectedPaymentMethod === 'bank-transfer';
+                            var total = orderData.total || 0;
+                            var subtotal = orderData.subtotal || 0;
+                            var fee = orderData.deliveryFee || 0;
+                            var status = orderData.status || 'pending';
+
+                            updateStatusUI(status, isCash, total, subtotal, fee);
+
+                            var orderNum = orderData.orderNumber || 'MAB' + Date.now().toString().slice(-6);
+                            orderNumber.textContent = '#' + orderNum;
+                            orderAmount.textContent = '₦' + total.toLocaleString();
+
+                            renderTracker(isCash, getStatusIndex(status));
+                            renderOrderDetails(orderNum, subtotal, fee, total, isCash);
+
+                            goToStep('status');
+
+                            if (orderData._id) {
+                                connectOrderSSE(orderData._id);
+                            }
+
+                            cart = [];
+                            renderCartItems();
+                            updateOrderSummary();
+                            updateCartCount();
+                            toggleDetailsVisibility();
+
+                            showToast('Order restored!', 'info');
+                        });
+
+                } catch (error) {
+                    console.error('❌ Failed to restore order:', error);
+                    localStorage.removeItem('mabite_last_order');
+                }
+            }
+
+            // ============================================
+            // BACK TO MENU
+            // ============================================
+
+            function backToMenu() {
+                localStorage.removeItem('mabite_last_order');
+                localStorage.removeItem('mabite_pending_order');
+                localStorage.removeItem('mabite_cart_backup');
+
+                if (orderEventSource) {
+                    orderEventSource.close();
+                    orderEventSource = null;
+                }
+
+                isOrderCompleted = true;
+                orderData = null;
+                orderId = null;
+                cart = [];
+
+                saveCart();
+
+                window.location.href = 'index.html';
+            }
+
+            // ============================================
+            // ORDER STATUS SSE LISTENER
+            // ============================================
+
+            function connectOrderSSE(orderId) {
+                if (orderEventSource) {
+                    orderEventSource.close();
+                    orderEventSource = null;
+                }
+
+                console.log('📡 Connecting to order SSE for:', orderId);
+
+                try {
+                    orderEventSource = new EventSource(API_URL + '/orders/stream/' + orderId);
+
+                    orderEventSource.onopen = function () {
+                        console.log('📡 Order SSE connected for:', orderId);
+                    };
+
+                    orderEventSource.onmessage = function (event) {
+                        try {
+                            var data = JSON.parse(event.data);
+                            console.log('📡 Order SSE update received:', data);
+
+                            if (data.type === 'order_update') {
+                                var order = data.data;
+                                console.log('📡 Order status updated to:', order.status);
+
+                                orderData.status = order.status || orderData.status;
+                                orderData.payment = order.payment || orderData.payment;
+                                orderData.total = order.total || orderData.total;
+                                orderData.subtotal = order.subtotal || orderData.subtotal;
+                                orderData.deliveryFee = order.deliveryFee || orderData.deliveryFee;
+                                orderData.items = order.items || orderData.items;
+
+                                localStorage.setItem('mabite_last_order', JSON.stringify({
+                                    orderNumber: orderData.orderNumber,
+                                    orderId: orderId,
+                                    orderData: orderData,
+                                    paymentMethod: selectedPaymentMethod,
+                                    timestamp: Date.now()
+                                }));
+
+                                var isCash = selectedPaymentMethod === 'cash' || selectedPaymentMethod === 'bank-transfer';
+                                var total = orderData.total || 0;
+                                var subtotal = orderData.subtotal || 0;
+                                var fee = orderData.deliveryFee || 0;
+                                var status = orderData.status || 'pending';
+
+                                updateStatusUI(status, isCash, total, subtotal, fee);
+
+                                var orderNum = orderData.orderNumber || 'MAB' + Date.now().toString().slice(-6);
+                                orderNumber.textContent = '#' + orderNum;
+                                orderAmount.textContent = '₦' + total.toLocaleString();
+
+                                renderTracker(isCash, getStatusIndex(status));
+                                renderOrderDetails(orderNum, subtotal, fee, total, isCash);
+
+                                if (isSoundEnabled && notificationSound) {
+                                    notificationSound.play();
+                                }
+
+                                var statusMessages = {
+                                    'confirmed': '✅ Order #' + orderNum + ' has been confirmed!',
+                                    'preparing': '🔥 Order #' + orderNum + ' is being prepared!',
+                                    'ready': '🛍️ Order #' + orderNum + ' is ready!',
+                                    'delivered': '🎉 Order #' + orderNum + ' has been delivered!',
+                                    'cancelled': '❌ Order #' + orderNum + ' has been cancelled.'
+                                };
+
+                                if (statusMessages[status]) {
+                                    showToast(statusMessages[status], 'info');
+                                }
+                            }
+                        } catch (e) {
+                            console.error('📡 Order SSE parse error:', e);
+                        }
+                    };
+
+                    orderEventSource.onerror = function (error) {
+                        console.log('📡 Order SSE error, will reconnect in 5s...');
+                        orderEventSource.close();
+                        orderEventSource = null;
+                        setTimeout(function () {
+                            if (orderData && orderData._id) {
+                                connectOrderSSE(orderData._id);
+                            }
+                        }, 5000);
+                    };
+
+                } catch (error) {
+                    console.error('📡 Order SSE setup error:', error);
+                }
+            }
+
+            // ============================================
+            // RENDER TRACKER
+            // ============================================
+
+            function renderTracker(isCash, activeIndex) {
+                var statuses = ['pending', 'confirmed', 'preparing', 'ready'];
+
+                var labels = ['Pending', 'Confirmed', 'Preparing', 'Ready'];
+
+                var icons = ['fa-clock', 'fa-check-circle', 'fa-fire', 'fa-box-open'];
+
+                var iconColors = ['#ff9800', '#2196F3', '#FF5722', '#4CAF50'];
+
+                var html = '<div class="tracker-steps">';
+                for (var i = 0; i < statuses.length; i++) {
+                    var isActive = i === activeIndex;
+                    var isDone = i < activeIndex;
+
+                    var color = isDone ? '#4CAF50' : (isActive ? iconColors[i] : '#ccc');
+                    var iconClass = icons[i] || 'fa-circle';
+
+                    html += `
+                        <div class="tracker-step-horizontal ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}" data-index="${i}">
+                            <div class="tracker-icon-horizontal" style="background: ${isDone ? '#4CAF50' : (isActive ? 'white' : '#f5f0eb')}; border-color: ${color};">
+                                <i class="fas ${iconClass}" style="color: ${color};"></i>
+                            </div>
+                            <div class="tracker-label-horizontal" style="color: ${isDone ? '#4CAF50' : (isActive ? '#fc6203' : '#6b6b74')};">
+                                ${labels[i]}
+                            </div>
+                            ${i < statuses.length - 1 ? `<div class="tracker-line-horizontal" style="background: ${isDone ? '#4CAF50' : (isActive ? iconColors[i] : '#e0dad3')};"></div>` : ''}
+                        </div>
+                    `;
+                }
+                html += '</div>';
+
+                orderTracker.innerHTML = html;
+            }
+
+            // ============================================
+            // RENDER ORDER DETAILS
+            // ============================================
+
+            function renderOrderDetails(orderNum, subtotal, fee, total, isCash) {
+                detailOrderNumber.textContent = orderNum || 'MAB1234';
+
+                var itemsHtml = '';
+                var items = orderData.items || [];
+                for (var i = 0; i < items.length; i++) {
+                    var item = items[i];
+                    itemsHtml += `
+                        <div class="detail-item-row">
+                            <span>${item.quantity} × ${sanitizeInput(item.name)}</span>
+                            <span>₦${(item.unitPrice * item.quantity).toLocaleString()}</span>
+                        </div>
+                    `;
+                }
+                detailItems.innerHTML = itemsHtml;
+
+                detailSubtotal.textContent = '₦' + (subtotal || 0).toLocaleString();
+                detailDelivery.textContent = '₦' + (fee || 0).toLocaleString();
+                detailTotal.textContent = '₦' + (total || 0).toLocaleString();
+
+                var isDelivery = orderData.delivery?.isDelivery || false;
+                detailDeliveryMethod.textContent = isDelivery ? 'Delivery' : 'Pickup';
+                detailPhone.textContent = orderData.customer?.phone || '—';
+
+                var addressRow = document.getElementById('detailAddressRow');
+                var addressText = orderData.delivery?.address || '—';
+                detailAddress.textContent = addressText;
+
+                if (addressRow) {
+                    addressRow.style.display = isDelivery ? 'flex' : 'none';
+                }
+            }
+
+            // ============================================
+            // TOGGLE ORDER DETAILS
+            // ============================================
+
+            function toggleOrderDetails() {
+                var isVisible = orderDetailsPanel.style.display !== 'none';
+                orderDetailsPanel.style.display = isVisible ? 'none' : 'block';
+                toggleDetailsBtn.innerHTML = isVisible ?
+                    '<i class="fas fa-chevron-down"></i> View Order Details' :
+                    '<i class="fas fa-chevron-up"></i> Hide Order Details';
+            }
+
+            // ============================================
+            // COPY ORDER NUMBER
+            // ============================================
+
+            function copyOrderNumber() {
+                var text = orderNumber.textContent;
+                if (!text || text === '#MAB1234') {
+                    showToast('No order number to copy', 'error');
+                    return;
+                }
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text)
+                        .then(function () {
+                            showToast('📋 Order number copied!', 'success');
+                        })
+                        .catch(function () {
+                            fallbackCopy(text);
+                        });
+                } else {
+                    fallbackCopy(text);
+                }
+            }
+
+            function fallbackCopy(text) {
+                var textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('📋 Order number copied!', 'success');
+                } catch (e) {
+                    showToast('Failed to copy. Please select and copy manually.', 'error');
+                }
+                document.body.removeChild(textarea);
+            }
+
+            // ============================================
+            // DOWNLOAD RECEIPT AS IMAGE
+            // ============================================
+
+            function downloadReceiptAsImage() {
+                var orderNum = orderNumber.textContent || '#MAB1234';
+                var receiptHTML = createReceiptHTML();
+
+                var container = document.createElement('div');
+                container.className = 'receipt-container-hidden';
+                container.innerHTML = receiptHTML;
+                document.body.appendChild(container);
+
+                if (typeof html2canvas === 'undefined') {
+                    var script = document.createElement('script');
+                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                    script.onload = function () {
+                        generateReceipt(container, orderNum);
+                    };
+                    script.onerror = function () {
+                        document.body.removeChild(container);
+                        showToast('Failed to load receipt generator. Please refresh and try again.', 'error');
+                    };
+                    document.head.appendChild(script);
+                    return;
+                }
+
+                generateReceipt(container, orderNum);
+            }
+
+            function generateReceipt(container, orderNum) {
+                html2canvas(container, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    width: 600,
+                    height: container.scrollHeight
+                }).then(function (canvas) {
+                    var link = document.createElement('a');
+                    link.download = 'Receipt_' + orderNum.replace('#', '') + '.png';
+                    link.href = canvas.toDataURL('image/png');
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    document.body.removeChild(container);
+                    showToast('📄 Receipt downloaded!', 'success');
+                }).catch(function (error) {
+                    console.error('Error generating receipt image:', error);
+                    document.body.removeChild(container);
+                    showToast('Failed to generate receipt. Please try again.', 'error');
+                });
+            }
+
+            // ============================================
+            // CREATE RECEIPT HTML
+            // ============================================
+
+            function createReceiptHTML() {
+                var orderNum = orderNumber.textContent || '#MAB1234';
+                var total = orderData.total || 0;
+                var subtotal = orderData.subtotal || 0;
+                var fee = orderData.deliveryFee || 0;
+                var isDelivery = orderData.delivery?.isDelivery || false;
+                var customerName = orderData.customer?.name || 'Guest';
+                var phone = orderData.customer?.phone || 'N/A';
+                var address = orderData.delivery?.address || 'N/A';
+                var items = orderData.items || [];
+                var paymentStatus = orderData.payment?.status === 'paid' ? '✅ PAID' : '⏳ PENDING';
+                var statusClass = orderData.payment?.status === 'paid' ? 'paid' : 'pending';
+
+                return `
+                    <div class="receipt-wrapper">
+                        <div class="receipt-header">
+                            <h1>🍽️ Mabites Grills</h1>
+                            <p>Fresh Shawarma • Made to Order</p>
+                            <p class="receipt-order-num">${orderNum}</p>
+                            <p class="receipt-date">${new Date().toLocaleString()}</p>
+                            <span class="receipt-status ${statusClass}">${paymentStatus}</span>
+                        </div>
+
+                        <div class="receipt-details">
+                            <div class="receipt-row">
+                                <span>Customer</span><span>${sanitizeInput(customerName)}</span>
+                            </div>
+                            <div class="receipt-row">
+                                <span>Phone</span><span>${phone}</span>
+                            </div>
+                            <div class="receipt-row">
+                                <span>Delivery</span><span>${isDelivery ? '🚚 Delivery' : '🏪 Pickup'}</span>
+                            </div>
+                            ${isDelivery ? `<div class="receipt-row"><span>Address</span><span>${sanitizeInput(address)}</span></div>` : ''}
+                        </div>
+
+                        <div class="receipt-items">
+                            <h3>Items</h3>
+                            ${items.map(item => `
+                                <div class="receipt-item">
+                                    <span>${item.quantity} × ${sanitizeInput(item.name)}</span>
+                                    <span>₦${(item.unitPrice * item.quantity).toLocaleString()}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="receipt-totals">
+                            <div class="receipt-row">
+                                <span>Subtotal</span><span>₦${subtotal.toLocaleString()}</span>
+                            </div>
+                            <div class="receipt-row">
+                                <span>Delivery Fee</span><span>₦${fee.toLocaleString()}</span>
+                            </div>
+                            <div class="receipt-row total">
+                                <span>TOTAL</span><span>₦${total.toLocaleString()}</span>
+                            </div>
+                        </div>
+
+                        <div class="receipt-footer">
+                            <p>Thank you for ordering from Mabites Grills!</p>
+                            <p>📍 Adenike Way, Lautech, Ogbomoso • 📞 09069101484</p>
+                            <p>${new Date().toLocaleString()}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // ============================================
+            // SHARE ORDER
+            // ============================================
+
+            function shareOrder() {
+                var orderNum = orderNumber.textContent || '#MAB1234';
+                var total = orderData.total || 0;
+
+                var shareText = `🍽️ Mabites Grills - Order ${orderNum}\nTotal: ₦${total.toLocaleString()}\n\nTrack your order at: ${window.location.href}`;
+
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Mabites Grills Order',
+                        text: shareText,
+                        url: window.location.href
+                    }).catch(function () { });
+                } else {
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(shareText)
+                            .then(function () {
+                                showToast('📋 Order details copied!', 'success');
+                            })
+                            .catch(function () {
+                                fallbackCopy(shareText);
+                            });
+                    } else {
+                        fallbackCopy(shareText);
+                    }
+                }
+            }
+
+            // ============================================
+            // UPDATE ORDER SUMMARY
+            // ============================================
+
+            function updateOrderSummary() {
+                var subtotal = getCartTotal();
+                var isDelivery = document.querySelector('.toggle-option.active')?.dataset.value === 'delivery';
+                var fee = isDelivery ? deliveryFee : 0;
+                var total = subtotal + fee;
+
+                if (subtotalAmount) subtotalAmount.textContent = '₦' + subtotal.toLocaleString();
+                if (deliveryFeeAmount) deliveryFeeAmount.textContent = '₦' + fee.toLocaleString();
+                if (totalAmount) totalAmount.textContent = '₦' + total.toLocaleString();
+            }
+
+            // ============================================
+            // DELIVERY TOGGLE
+            // ============================================
+
+            function setupDeliveryToggle() {
+                deliveryToggle.forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        deliveryToggle.forEach(function (b) { b.classList.remove('active'); });
+                        this.classList.add('active');
+
+                        var isDelivery = this.dataset.value === 'delivery';
+                        if (deliveryAddress) {
+                            deliveryAddress.classList.toggle('show', isDelivery);
+                        }
+
+                        updateOrderSummary();
+                    });
+                });
+            }
+
+            // ============================================
+            // EXPOSE GLOBALLY
+            // ============================================
+
+            window._cartJS = {
+                updateQty: updateQuantity,
+                removeItem: removeItem,
+                selectPaymentMethod: selectPaymentMethod,
+                makePayment: makePayment,
+                continueToPayment: continueToPayment,
+                copyOrder: copyOrderNumber,
+                downloadReceipt: downloadReceiptAsImage,
+                shareOrder: shareOrder,
+                goBackToCheckout: goBackToCheckout,
+                openClearCartModal: openClearCartModal,
+                closeClearCartModal: closeClearCartModal,
+                clearCart: clearCart,
+                openTrackOrderModal: openTrackOrderModal,
+                backToMenu: backToMenu
+            };
+
+            // ============================================
+            // INIT
+            // ============================================
+
+            function init() {
+                console.log('🛒 Mabites Grills - Checkout Page');
+                console.log('📡 API URL:', API_URL);
+
+                var savedOrder = localStorage.getItem('mabite_last_order');
+                var pendingOrder = localStorage.getItem('mabite_pending_order');
+                var cartBackup = localStorage.getItem('mabite_cart_backup');
+
+                if (savedOrder) {
+                    restoreOrderOnRefresh();
+                } else if (pendingOrder) {
+                    restoreOrderOnRefresh();
+                } else if (cartBackup) {
+                    try {
+                        cart = JSON.parse(cartBackup);
+                        if (cart.length > 0) {
+                            renderCartItems();
+                            updateOrderSummary();
+                            updateCartCount();
+                            toggleDetailsVisibility();
+                            saveCart();
+                        } else {
+                            loadCart();
+                        }
+                    } catch (e) {
+                        loadCart();
+                    }
+                } else {
+                    loadCart();
+                }
+
+                setupDeliveryToggle();
+                updateOrderSummary();
+
+                if (continueToPaymentBtn) {
+                    continueToPaymentBtn.addEventListener('click', function () {
+                        window._cartJS.continueToPayment();
+                    });
+                }
+
+                if (clearCartBtn) {
+                    clearCartBtn.addEventListener('click', function () {
+                        window._cartJS.openClearCartModal();
+                    });
+                }
+
+                if (cancelClearBtn) {
+                    cancelClearBtn.addEventListener('click', function () {
+                        window._cartJS.closeClearCartModal();
+                    });
+                }
+
+                if (confirmClearBtn) {
+                    confirmClearBtn.addEventListener('click', function () {
+                        window._cartJS.clearCart();
+                    });
+                }
+
+                if (clearCartModal) {
+                    clearCartModal.addEventListener('click', function (e) {
+                        if (e.target === clearCartModal) {
+                            window._cartJS.closeClearCartModal();
+                        }
+                    });
+                }
+
+                if (backToCheckoutBtn) {
+                    backToCheckoutBtn.addEventListener('click', function () {
+                        window._cartJS.goBackToCheckout();
+                    });
+                }
+
+                if (makePaymentBtn) {
+                    makePaymentBtn.addEventListener('click', function () {
+                        window._cartJS.makePayment();
+                    });
+                }
+
+                if (toggleDetailsBtn) {
+                    toggleDetailsBtn.addEventListener('click', toggleOrderDetails);
+                }
+
+                if (copyOrderBtn) {
+                    copyOrderBtn.addEventListener('click', function () {
+                        window._cartJS.copyOrder();
+                    });
+                }
+
+                if (downloadReceiptBtn) {
+                    downloadReceiptBtn.addEventListener('click', function () {
+                        window._cartJS.downloadReceipt();
+                    });
+                }
+
+                var shareBtn = document.getElementById('shareOrderBtn');
+                if (shareBtn) {
+                    shareBtn.addEventListener('click', function () {
+                        window._cartJS.shareOrder();
+                    });
+                }
+
+                if (backToMenuBtn) {
+                    backToMenuBtn.addEventListener('click', function () {
+                        window._cartJS.backToMenu();
+                    });
+                }
+
+                if (trackModalClose) {
+                    trackModalClose.addEventListener('click', closeTrackOrderModal);
+                }
+
+                if (trackModal) {
+                    trackModal.addEventListener('click', function (e) {
+                        if (e.target === trackModal) {
+                            closeTrackOrderModal();
+                        }
+                    });
+                }
+
+                if (trackBtn) {
+                    trackBtn.addEventListener('click', trackOrder);
+                }
+
+                if (trackInput) {
+                    trackInput.addEventListener('keydown', function (e) {
+                        if (e.key === 'Enter') {
+                            trackOrder();
+                        }
+                    });
+                }
+
+                var emptyTrackBtns = document.querySelectorAll('.btn-track-order');
+                emptyTrackBtns.forEach(function (btn) {
+                    btn.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        openTrackOrderModal();
+                    });
+                });
+
+                deliveryToggle.forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        setTimeout(updateOrderSummary, 50);
+                    });
+                });
+
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') {
+                        if (clearCartModal.classList.contains('open')) {
+                            closeClearCartModal();
+                        }
+                        if (trackModal.classList.contains('open')) {
+                            closeTrackOrderModal();
+                        }
+                    }
+                });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+        })();
+    </script>
+
+</body>
+
+</html>
