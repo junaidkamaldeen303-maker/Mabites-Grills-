@@ -13,8 +13,8 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Import Google OAuth routes
-const googleRoutes = require('./src/routes/googleRoutes');
+// Import Google OAuth routes (DISABLED)
+// const googleRoutes = require('./src/routes/googleRoutes');
 
 // ===== MIDDLEWARE =====
 app.use(cors({
@@ -258,7 +258,7 @@ function broadcastMenuUpdate() {
 
 // ===== AUTH ROUTES =====
 app.use('/api/auth', require('./src/routes/auth'));
-app.use('/api/auth', googleRoutes);
+// app.use('/api/auth', googleRoutes);
 
 // ===== ROUTES =====
 
