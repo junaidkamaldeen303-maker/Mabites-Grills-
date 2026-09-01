@@ -27,8 +27,9 @@ app.use(cookieParser());
 // ===== SERVE STATIC FILES =====
 // Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-// Serve frontend files (HTML, CSS, JS) 
-app.use(express.static(__dirname));
+
+// ADD THIS LINE - Serve frontend files from root
+app.use(express.static(path.join(__dirname, '..')));
 
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, 'uploads');
