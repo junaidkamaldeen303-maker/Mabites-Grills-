@@ -335,15 +335,15 @@
             'use strict';
 
             // ============================================
-            // CONFIGURATION
-            // ============================================
+// API URL - Production Ready
+// ============================================
 
-            var API_URL = (function () {
-                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                    return 'http://localhost:3000/api';
-                }
-                return '/api';
-            })();
+const API_URL = (() => {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://localhost:3000/api';
+    }
+    return 'https://mabites-grills-mkv8.onrender.com/api';
+})();
 
             // ============================================
             // STATE

@@ -2,7 +2,13 @@
 // dashboard.js – Complete Admin Dashboard with Stats API
 // ============================================================
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = (() => {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://localhost:3000/api';
+    }
+    return 'https://mabites-grills-mkv8.onrender.com/api';
+})();
+
 let currentSection = 'overview';
 let allOrders = [];
 let allMenuItems = [];

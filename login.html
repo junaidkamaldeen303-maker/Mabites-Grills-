@@ -99,7 +99,23 @@
                 try {
                     console.log('🔐 Attempting login for:', email);
 
-                    const response = await fetch('http://localhost:3000/api/auth/login', {
+                   // ============================================
+// API URL - Production Ready
+// ============================================
+
+const API_URL = (() => {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://localhost:3000/api';
+    }
+    return 'https://mabites-grills-mkv8.onrender.com/api';
+})();
+
+// Then in your login function, change:
+// FROM:
+// const response = await fetch('http://localhost:3000/api/auth/login', {
+
+// TO:
+const response = await fetch(`${API_URL}/auth/login`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
