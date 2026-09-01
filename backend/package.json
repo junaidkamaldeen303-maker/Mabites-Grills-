@@ -1,38 +1,42 @@
 {
-  "name": "backend",
+  "name": "mabites-grills",
   "version": "1.0.0",
-  "description": "Mabite Wraps & Grills API",
+  "description": "Fresh shawarma, grilled chicken, chips, parfait and more — made with love.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "seed": "node src/seed.js",
-    "fix-admin": "node src/fix-admin.js",
-    "check-admin": "node src/check-admin.js",
-    "manual-fix": "node src/manual-fix.js",
-    "update-password": "node src/update-password.js"
+    "prod": "pm2 start ecosystem.config.js --env production",
+    "stop": "pm2 stop mabites",
+    "restart": "pm2 restart mabites",
+    "logs": "pm2 logs mabites",
+    "cluster": "node server-cluster.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "mabites",
+    "grills",
+    "shawarma",
+    "food",
+    "ordering",
+    "restaurant"
+  ],
+  "author": "Mabites Grills",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "axios": "^1.9.0",
-    "bcryptjs": "^3.0.3",
-    "cookie-parser": "^1.4.7",
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^4.21.2",
-    "express-rate-limit": "^7.5.1",
-    "googleapis": "^174.0.1",
-    "helmet": "^8.1.0",
-    "joi": "^17.13.3",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.10.0",
+    "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.9.5",
-    "multer": "^2.2.0",
-    "winston": "^3.17.0"
+    "mongoose": "^7.5.0",
+    "multer": "^1.4.5-lts.1",
+    "redis": "^4.6.10"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.0.1"
   }
 }
