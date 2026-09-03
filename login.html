@@ -9,6 +9,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="frontend/public/images/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="frontend/public/images/favicon.png">
+    <link rel="shortcut icon" href="frontend/public/images/favicon.png">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -59,6 +63,19 @@
 
             console.log('🔐 login.html loaded');
 
+            // ============================================
+            // API URL - Production Ready
+            // ============================================
+
+            const API_URL = (() => {
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    return 'http://localhost:3000/api';
+                }
+                return 'https://mabites-grills-mkv8.onrender.com/api';
+            })();
+
+            console.log('📍 API_URL:', API_URL);
+
             // ===== PASSWORD TOGGLE =====
             const togglePassword = document.getElementById('togglePassword');
             const passwordInput = document.getElementById('password');
@@ -98,24 +115,9 @@
 
                 try {
                     console.log('🔐 Attempting login for:', email);
+                    console.log('📍 Using API_URL:', API_URL);
 
-                   // ============================================
-// API URL - Production Ready
-// ============================================
-
-const API_URL = (() => {
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return 'http://localhost:3000/api';
-    }
-    return 'https://mabites-grills-mkv8.onrender.com/api';
-})();
-
-// Then in your login function, change:
-// FROM:
-// const response = await fetch('http://localhost:3000/api/auth/login', {
-
-// TO:
-const response = await fetch(`${API_URL}/auth/login`, {
+                    const response = await fetch(`${API_URL}/auth/login`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -152,10 +154,9 @@ const response = await fetch(`${API_URL}/auth/login`, {
                         stack: error.stack
                     });
 
-                    // Show specific error messages
                     let userMessage = 'Network error. Please check your connection.';
                     if (error.message === 'Failed to fetch') {
-                        userMessage = '❌ Cannot connect to server. Make sure the backend is running on http://localhost:3000';
+                        userMessage = '❌ Cannot connect to server. Make sure the backend is running.';
                     } else if (error.message.includes('ECONNREFUSED')) {
                         userMessage = '❌ Server is not running. Please start the backend server.';
                     } else if (error.message.includes('CORS')) {

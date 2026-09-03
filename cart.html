@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="style.css">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="frontend/public/images/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="frontend/public/images/favicon.png">
+    <link rel="shortcut icon" href="frontend/public/images/favicon.png">
     <!-- html2canvas for image generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
     </script>
@@ -335,15 +339,15 @@
             'use strict';
 
             // ============================================
-// API URL - Production Ready
-// ============================================
+            // API URL - Production Ready
+            // ============================================
 
-const API_URL = (() => {
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return 'http://localhost:3000/api';
-    }
-    return 'https://mabites-grills-mkv8.onrender.com/api';
-})();
+            const API_URL = (() => {
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    return 'http://localhost:3000/api';
+                }
+                return 'https://mabites-grills-mkv8.onrender.com/api';
+            })();
 
             // ============================================
             // STATE

@@ -9,6 +9,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="frontend/public/images/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="frontend/public/images/favicon.png">
+  <link rel="shortcut icon" href="frontend/public/images/favicon.png">
   <style>
     /* ============================================
        ADMIN DASHBOARD STYLES - COMPLETE
@@ -1480,22 +1484,22 @@
         console.log('🔐 [1] Starting authentication check...');
 
         // ============================================
-// API URL - Production Ready
-// ============================================
+        // API URL - Production Ready
+        // ============================================
 
-const API_URL = (() => {
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return 'http://localhost:3000/api';
-    }
-    return 'https://mabites-grills-mkv8.onrender.com/api';
-})();
+        const API_URL = (() => {
+          if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            return 'http://localhost:3000/api';
+          }
+          return 'https://mabites-grills-mkv8.onrender.com/api';
+        })();
 
-// Then in your login function, change:
-// FROM:
-// const response = await fetch('http://localhost:3000/api/auth/login', {
+        // Then in your login function, change:
+        // FROM:
+        // const response = await fetch('http://localhost:3000/api/auth/login', {
 
-// TO:
-const response = await fetch(`${API_URL}/auth/login`, {
+        // TO:
+        const response = await fetch(`${API_URL}/auth/login`, {
           method: 'GET',
           credentials: 'include',
           headers: {
