@@ -3,10 +3,10 @@
 // ============================================================
 
 const API_URL = (() => {
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return 'http://localhost:3000/api';
-    }
-    return 'https://mabites-grills-mkv8.onrender.com/api';
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return 'http://localhost:3000/api';
+  }
+  return 'https://mabites-grills-mkv8.onrender.com/api';
 })();
 
 let currentSection = 'overview';
@@ -459,16 +459,21 @@ function toggleSidebar() {
 async function logout() {
   try {
     console.log('🔐 Logging out...');
-    await fetch('http://localhost:3000/api/auth/logout', {
+
+    await fetch(`${API_URL}/auth/logout`, {
       method: 'POST',
       credentials: 'include',
     });
+
+    console.log('✅ Logout request completed');
   } catch (error) {
-    // Silent fail
+    console.error('❌ Logout request failed:', error);
   }
+
   sessionStorage.removeItem('mabite_user');
   localStorage.removeItem('mabite_admin');
   sessionStorage.removeItem('adminSection');
+
   window.location.href = 'login.html';
 }
 

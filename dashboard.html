@@ -1483,70 +1483,106 @@
       try {
         console.log('🔐 [1] Starting authentication check...');
 
-        // ============================================
-        // API URL - Production Ready
-        // ============================================
-
         const API_URL = (() => {
-          if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          if (
+            window.location.hostname === 'localhost' ||
+            window.location.hostname === '127.0.0.1'
+          ) {
             return 'http://localhost:3000/api';
           }
+
           return 'https://mabites-grills-mkv8.onrender.com/api';
         })();
 
-        // Then in your login function, change:
-        // FROM:
-        // const response = await fetch('http://localhost:3000/api/auth/login', {
+        console.log(
+          '🔐 [2] Checking authentication at:',
+          `${API_URL}/auth/me`
+        );
 
-        // TO:
-        const response = await fetch(`${API_URL}/auth/login`, {
+        const response = await fetch(`${API_URL}/auth/me`, {
           method: 'GET',
           credentials: 'include',
           headers: {
             'Accept': 'application/json',
             'Cache-Control': 'no-cache'
-          },
+          }
         });
 
-        console.log('🔐 [2] Auth check response status:', response.status);
+        console.log(
+          '🔐 [3] Auth check response status:',
+          response.status
+        );
 
         if (!response.ok) {
-          console.log('❌ [3] Auth check failed. Status:', response.status);
-          console.log('❌ [4] Redirecting to login...');
+          console.log(
+            '❌ [4] Auth check failed. Status:',
+            response.status
+          );
+
+          console.log('❌ [5] Redirecting to login...');
+
           window.location.href = 'login.html';
           return;
         }
 
         const result = await response.json();
-        console.log('🔐 [5] Auth check result:', result);
+
+        console.log('🔐 [6] Auth check result:', result);
 
         if (!result.success) {
-          console.log('❌ [6] Auth check unsuccessful:', result.message);
+          console.log(
+            '❌ [7] Auth check unsuccessful:',
+            result.message
+          );
+
           window.location.href = 'login.html';
           return;
         }
 
-        console.log('✅ [7] Authenticated as:', result.data.user);
-        console.log('✅ [8] User role:', result.data.user.role);
+        console.log(
+          '✅ [8] Authenticated as:',
+          result.data.user
+        );
 
-        sessionStorage.setItem('mabite_user', JSON.stringify(result.data.user));
+        console.log(
+          '✅ [9] User role:',
+          result.data.user.role
+        );
 
-        if (result.data.user.role !== 'admin' && result.data.user.role !== 'manager') {
-          console.log('⚠️ [9] User is not admin - redirecting to kitchen');
+        sessionStorage.setItem(
+          'mabite_user',
+          JSON.stringify(result.data.user)
+        );
+
+        if (
+          result.data.user.role !== 'admin' &&
+          result.data.user.role !== 'manager'
+        ) {
+          console.log(
+            '⚠️ [10] User is not admin/manager - redirecting to kitchen'
+          );
+
           window.location.href = 'kitchen.html';
           return;
         }
 
-        console.log('✅ [10] Admin verified. Dashboard will load.');
+        console.log(
+          '✅ [11] Admin/manager verified. Dashboard will load.'
+        );
 
-        // After auth, restore the saved section
-        const savedSection = sessionStorage.getItem('adminSection') || 'overview';
+        const savedSection =
+          sessionStorage.getItem('adminSection') || 'overview';
+
         setTimeout(function () {
           navigateTo(savedSection, true);
         }, 50);
 
       } catch (error) {
-        console.error('❌ [11] Auth check error:', error);
+        console.error(
+          '❌ [12] Auth check error:',
+          error
+        );
+
         window.location.href = 'login.html';
       }
     }
