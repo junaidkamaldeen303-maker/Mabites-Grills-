@@ -20,14 +20,11 @@ const setTokenCookie = (res, token) => {
 
     res.cookie('token', token, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge: 24 * 60 * 60 * 1000,
-        path: '/',
-        // Add domain for localhost
-        domain: 'localhost',
+        path: '/'
     });
-
     console.log('🍪 Cookie set!');
 };
 
